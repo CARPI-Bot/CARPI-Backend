@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 
 @Entity
-@Table(name = "courses")
+@Table(name = "course")
 public class Course {
 
     @EmbeddedId
@@ -32,4 +32,9 @@ public class Course {
     @Column(name = "desc_text", nullable = false)
     private String description;
 
+    @Column(name = "credit_min", nullable = false)
+    private short creditMin;
+
+    @Column(name = "credit_max", nullable = false)
+    private short creditMax;
 }
