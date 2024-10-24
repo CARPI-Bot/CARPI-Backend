@@ -1,12 +1,11 @@
 package com.carpi.carpibackend.keys;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
-import java.io.Serializable;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,5 +18,4 @@ public class CourseKey implements Serializable {
 
     @Column(name = "code_num", insertable = false, updatable = false, nullable = false)
     private int code;
-
 }
