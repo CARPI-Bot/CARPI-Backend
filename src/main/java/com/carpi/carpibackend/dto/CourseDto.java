@@ -19,4 +19,8 @@ public class CourseDto {
     private short creditMin;
 
     private short creditMax;
+
+    private String[] semesterList;
+    
+    private String[] attributeList;
 }

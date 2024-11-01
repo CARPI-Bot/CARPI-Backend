@@ -11,7 +11,7 @@ import com.carpi.carpibackend.keys.CourseKey;
 
 @Repository
 public interface CourseSearchResultRepository extends JpaRepository<CourseSearchResult, CourseKey> {
-   
+
     @Query(
         value = """
             SELECT
@@ -21,6 +21,8 @@ public interface CourseSearchResultRepository extends JpaRepository<CourseSearch
                 course.desc_text AS desc_text,
                 course.credit_min AS credit_min,
                 course.credit_max AS credit_max,
+                GROUP_CONCAT(DISTINCT CONCAT(course_seats.semester, ' ', course_seats.sem_year)) AS sem_list,
+                GROUP_CONCAT(DISTINCT course_attribute.attr) AS attr_list,
                 REGEXP_LIKE(CONCAT(course.dept, ' ', course.code_num), ?1, 'i') AS code_match,
                 REGEXP_LIKE(course.title, ?2, 'i') AS title_exact_match,
                 REGEXP_LIKE(course.title, ?3, 'i') AS title_start_match,
@@ -29,15 +31,33 @@ public interface CourseSearchResultRepository extends JpaRepository<CourseSearch
                 REGEXP_LIKE(course.title, ?6, 'i') AS title_abbrev
             FROM
                 course
+                INNER JOIN course_seats USING(dept, code_num)
+                LEFT JOIN course_attribute USING(dept, code_num)
+            WHERE
+                dept = IF(?7 IS NOT NULL, ?7, course.dept)
             GROUP BY
-                1, 2
+                dept,
+                code_num,
+                title,
+                desc_text,
+                credit_min,
+                credit_max,
+                code_match,
+                title_exact_match,
+                title_start_match,
+                title_match,
+                title_acronym,
+                title_abbrev
             HAVING
-                code_match > 0
-                OR title_exact_match > 0
-                OR title_start_match > 0
-                OR title_match > 0
-                OR title_acronym > 0
-                OR title_abbrev > 0
+                ( 
+                    code_match > 0
+                    OR title_exact_match > 0
+                    OR title_start_match > 0
+                    OR title_match > 0
+                    OR title_acronym > 0
+                    OR title_abbrev > 0
+                )
+                AND sem_list LIKE CONCAT('%', IF(?8 IS NOT NULL, ?8, sem_list), '%')
             ORDER BY
                 code_match DESC,
                 title_exact_match DESC,
@@ -51,12 +71,15 @@ public interface CourseSearchResultRepository extends JpaRepository<CourseSearch
         """,
         nativeQuery = true
     )
-    public List<CourseSearchResult> searchCourse(
+    public List<CourseSearchResult> searchCourses(
         String regexCode,
         String regexFull,
         String regexStart,
         String regexAny,
         String regexAcronym,
-        String regexAbbrev
+        String regexAbbrev,
+        String deptFilter,
+        // String attrFilter,
+        String semsFilter
     );
 }

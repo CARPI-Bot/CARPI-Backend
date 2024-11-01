@@ -35,6 +35,12 @@ public class CourseSearchResult {
     @Column(name = "credit_max", nullable = false)
     private short creditMax;
 
+    @Column(name = "sem_list", nullable = false)
+    private String semesterList;
+
+    @Column(name = "attr_list", nullable = true)
+    private String attributeList;
+
     @Column(name = "code_match", nullable = false)
     private boolean codeMatch;
 
