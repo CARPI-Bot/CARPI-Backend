@@ -1,5 +1,6 @@
 package com.carpi.carpibackend.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.carpi.carpibackend.dto.CourseDto;
@@ -34,13 +35,17 @@ public class CourseController {
 
     @GetMapping("/search")
     public ResponseEntity<List<CourseDto>> searchCourses(
-            @RequestParam(required = false) String prompt,
-            @RequestParam(required = false) String deptFilter,
-            @RequestParam(required = false) String attrFilter,
-            @RequestParam(required = false) String semFilter
+            @RequestParam(required = false) String searchPrompt,
+            @RequestParam(required = false) String[] deptFilters,
+            @RequestParam(required = false) String[] attrFilters,
+            @RequestParam(required = false) String[] semFilters
     ) {
-        List<CourseSearchResult> searchResults =
-                courseSearchService.searchCourses(prompt, deptFilter, attrFilter, semFilter);
+        List<CourseSearchResult> searchResults = courseSearchService.searchCourses(
+                searchPrompt,
+                deptFilters,
+                attrFilters,
+                semFilters
+        );
         List<CourseDto> courseDtos = searchResults.stream().map(
                                         result -> modelMapper.map(result, CourseDto.class)
                                     ).collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package com.carpi.carpibackend.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +19,40 @@ public class CourseSearchService {
      * @author Jack Zgombic
      * @author Raymond Chen
      * @param searchPrompt Prompt used to search for relevant courses. May be null.
-     * @param deptFilter Department filter (e.g. "CSCI", "MATH"). May be null.
-     * @param attrFilter Attribute filter (e.g. "HASS Inquiry"). May be null.
-     * @param semsFilter Semester filter (e.g. "Fall", "Spring"). May be null.
+     * @param deptFilters  Department filters (e.g. "CSCI", "MATH"). May be null.
+     * @param attrFilters  Attribute filters (e.g. "HASS Inquiry"). May be null.
+     * @param semFilters   Semester filters (e.g. "Fall", "Spring"). May be null.
      * @return A list containing the most relevant courses according to the given
      *         search prompt and filters, or a list of all courses if all arguments
      *         are null.
      */
     public List<CourseSearchResult> searchCourses(
             String searchPrompt,
-            String deptFilter,
-            String attrFilter,
-            String semsFilter
+            String[] deptFilters,
+            String[] attrFilters,
+            String[] semFilters
     ) {
+        String[] deptFiltersCopy = null,
+                 attrFiltersCopy = null,
+                 semFiltersCopy = null;
+        String deptFilterRegex = ".*",
+               attrFilterRegex = ".*",
+               semFilterRegex = ".*";
+        if (deptFilters != null && deptFilters.length > 0) {
+            deptFiltersCopy = Arrays.copyOf(deptFilters, deptFilters.length);
+            Arrays.sort(deptFiltersCopy);
+            deptFilterRegex = String.join("|", deptFiltersCopy);
+        }
+        if (attrFilters != null && attrFilters.length > 0) {
+            attrFiltersCopy = Arrays.copyOf(attrFilters, attrFilters.length);
+            Arrays.sort(attrFiltersCopy);
+            attrFilterRegex = String.join(".*", attrFiltersCopy);
+        }
+        if (semFilters != null && semFilters.length > 0) {
+            semFiltersCopy = Arrays.copyOf(semFilters, semFilters.length);
+            Arrays.sort(semFiltersCopy);
+            semFilterRegex = String.join(".*", semFiltersCopy);
+        }
         if (searchPrompt == null) {
             return courseSearchResultRepository.searchCourses(
                 ".*",
@@ -39,47 +61,46 @@ public class CourseSearchService {
                 ".*",
                 ".*",
                 ".*",
-                deptFilter,
-                // attrFilter,
-                semsFilter
+                deptFilterRegex,
+                attrFilterRegex,
+                semFilterRegex
             );
         }
         final String regStartOrSpace = "(^|.* )";
-        String regexCode = "^" + searchPrompt + "$",
-               regexFull = "^" + searchPrompt + "$",
-               regexStart = "^" + searchPrompt,
-               regexAny = searchPrompt,
-               regexAcronym = regStartOrSpace;
+        String searchCodeRegex = "^" + searchPrompt + "$",
+               searchFullRegex = "^" + searchPrompt + "$",
+               searchStartRegex = "^" + searchPrompt,
+               searchAnyRegex = searchPrompt,
+               searchAcronymRegex = regStartOrSpace;
         for (int i = 0; i < searchPrompt.length(); ++i) {
             char ch = searchPrompt.charAt(i);
             if (ch != ' ') {
-                regexAcronym += ch + ".* ";
+                searchAcronymRegex += ch + ".* ";
             }
         }
-        regexAcronym = regexAcronym.substring(0, regexAcronym.length() - 3);
-        String regexAbbrev = "";
+        searchAcronymRegex = searchAcronymRegex.substring(0, searchAcronymRegex.length() - 3);
+        String searchAbbrevRegex = "";
         String[] tokens = searchPrompt.split(" ");
         if (tokens.length > 1) {
-            regexAbbrev += regStartOrSpace;
+            searchAbbrevRegex += regStartOrSpace;
             for (int i = 0; i < tokens.length; ++i) {
-                regexAbbrev += tokens[i] + ".* ";
+                searchAbbrevRegex += tokens[i] + ".* ";
             }
-            regexAbbrev = regexAbbrev.substring(0, regexAbbrev.length() - 3);
+            searchAbbrevRegex = searchAbbrevRegex.substring(0, searchAbbrevRegex.length() - 3);
         }
         else {
-            regexAbbrev = "a^";
+            searchAbbrevRegex = "a^";
         }
         return courseSearchResultRepository.searchCourses(
-            regexCode,
-            regexFull,
-            regexStart,
-            regexAny,
-            regexAcronym,
-            regexAbbrev,
-            deptFilter,
-            // attrFilter,
-            semsFilter
+            searchCodeRegex,
+            searchFullRegex,
+            searchStartRegex,
+            searchAnyRegex,
+            searchAcronymRegex,
+            searchAbbrevRegex,
+            deptFilterRegex,
+            attrFilterRegex,
+            semFilterRegex
         );
     }
-
 }

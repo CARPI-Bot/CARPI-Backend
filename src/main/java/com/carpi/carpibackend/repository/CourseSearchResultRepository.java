@@ -22,7 +22,7 @@ public interface CourseSearchResultRepository extends JpaRepository<CourseSearch
                 course.credit_min AS credit_min,
                 course.credit_max AS credit_max,
                 GROUP_CONCAT(DISTINCT CONCAT(course_seats.semester, ' ', course_seats.sem_year)) AS sem_list,
-                GROUP_CONCAT(DISTINCT course_attribute.attr) AS attr_list,
+                GROUP_CONCAT(DISTINCT course_attribute.attr ORDER BY course_attribute.attr ASC) AS attr_list,
                 REGEXP_LIKE(CONCAT(course.dept, ' ', course.code_num), ?1, 'i') AS code_match,
                 REGEXP_LIKE(course.title, ?2, 'i') AS title_exact_match,
                 REGEXP_LIKE(course.title, ?3, 'i') AS title_start_match,
@@ -34,7 +34,7 @@ public interface CourseSearchResultRepository extends JpaRepository<CourseSearch
                 INNER JOIN course_seats USING(dept, code_num)
                 LEFT JOIN course_attribute USING(dept, code_num)
             WHERE
-                dept = IF(?7 IS NOT NULL, ?7, course.dept)
+                REGEXP_LIKE(dept, ?7, 'i') > 0
             GROUP BY
                 dept,
                 code_num,
@@ -57,7 +57,8 @@ public interface CourseSearchResultRepository extends JpaRepository<CourseSearch
                     OR title_acronym > 0
                     OR title_abbrev > 0
                 )
-                AND sem_list LIKE CONCAT('%', IF(?8 IS NOT NULL, ?8, sem_list), '%')
+                AND REGEXP_LIKE(IFNULL(attr_list, ''), ?8, 'i') > 0
+                AND REGEXP_LIKE(sem_list, ?9, 'i') > 0
             ORDER BY
                 code_match DESC,
                 title_exact_match DESC,
@@ -72,14 +73,14 @@ public interface CourseSearchResultRepository extends JpaRepository<CourseSearch
         nativeQuery = true
     )
     public List<CourseSearchResult> searchCourses(
-        String regexCode,
-        String regexFull,
-        String regexStart,
-        String regexAny,
-        String regexAcronym,
-        String regexAbbrev,
-        String deptFilter,
-        // String attrFilter,
-        String semsFilter
+        String searchCodeRegex,
+        String searchFullRegex,
+        String searchStartRegex,
+        String searchAnyRegex,
+        String searchAcronymRegex,
+        String searchAbbrevRegex,
+        String deptFilterRegex,
+        String attrFilterRegex,
+        String semFilterRegex
     );
 }
