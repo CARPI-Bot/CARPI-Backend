@@ -1,6 +1,5 @@
 package com.carpi.carpibackend.controller;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +16,8 @@ import com.carpi.carpibackend.dto.CourseDto;
 import com.carpi.carpibackend.entity.CourseSearchResult;
 import com.carpi.carpibackend.service.CourseSearchService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/course")
@@ -29,11 +30,13 @@ public class CourseController {
     private ModelMapper modelMapper;
 
     @GetMapping("/all")
+    @Operation(summary = "Gets a list of all courses.")
     public ResponseEntity<List<CourseDto>> getAll() {
         return searchCourses(null, null, null, null);
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Gets a list of courses based on an optional search prompt and optional filters.")
     public ResponseEntity<List<CourseDto>> searchCourses(
             @RequestParam(required = false) String searchPrompt,
             @RequestParam(required = false) String[] deptFilters,
