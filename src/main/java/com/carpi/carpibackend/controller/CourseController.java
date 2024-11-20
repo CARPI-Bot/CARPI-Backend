@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.carpi.carpibackend.dto.CourseDto;
 import com.carpi.carpibackend.entity.CourseSearchResult;
+import com.carpi.carpibackend.projection.CourseAttributeProjection;
+import com.carpi.carpibackend.projection.CourseDepartmentProjection;
+import com.carpi.carpibackend.projection.CourseSemesterProjection;
+import com.carpi.carpibackend.repository.CourseAttributeRepository;
+import com.carpi.carpibackend.repository.CourseRepository;
+import com.carpi.carpibackend.repository.CourseSeatsRepository;
 import com.carpi.carpibackend.service.CourseSearchService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +31,15 @@ public class CourseController {
 
     @Autowired
     private CourseSearchService courseSearchService;
+
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private CourseAttributeRepository courseAttributeRepository;
+
+    @Autowired
+    private CourseSeatsRepository courseSeatsRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -54,4 +69,35 @@ public class CourseController {
                                     ).collect(Collectors.toList());
         return ResponseEntity.ok(courseDtos);
     }
+
+    @GetMapping("/filter/values/departments")
+    @Operation(summary = "Gets a list of all departments.")
+    public ResponseEntity<List<String>> getDepartments() {
+        List<CourseDepartmentProjection> depts = courseRepository.getDistinctDepartments();
+        List<String> deptNames = depts.stream().map(
+                                    CourseDepartmentProjection::getDepartment
+                                ).collect(Collectors.toList());
+        return ResponseEntity.ok(deptNames);
+    }
+
+    @GetMapping("/filter/values/attributes")
+    @Operation(summary = "Gets a list of all attributes.")
+    public ResponseEntity<List<String>> getAttributes() {
+        List<CourseAttributeProjection> depts = courseAttributeRepository.getDistinctAttributes();
+        List<String> attrNames = depts.stream().map(
+                                    CourseAttributeProjection::getAttribute
+                                ).collect(Collectors.toList());
+        return ResponseEntity.ok(attrNames);
+    }
+
+    @GetMapping("/filter/values/semesters")
+    @Operation(summary = "Gets a list of all semesters.")
+    public ResponseEntity<List<String>> getSemesters() {
+        List<CourseSemesterProjection> depts = courseSeatsRepository.getDistinctSemesters();
+        List<String> semNames = depts.stream().map(
+                                    CourseSemesterProjection::getSemester
+                                ).collect(Collectors.toList());
+        return ResponseEntity.ok(semNames);
+    }
+
 }

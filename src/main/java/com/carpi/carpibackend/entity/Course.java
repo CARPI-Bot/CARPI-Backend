@@ -17,7 +17,7 @@ import lombok.Setter;
 public class Course {
 
     @EmbeddedId
-    private CourseKey pkCourses;
+    private CourseKey coursePk;
 
     @Column(name = "dept", nullable = false)
     private String department;
