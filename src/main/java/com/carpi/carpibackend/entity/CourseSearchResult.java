@@ -15,13 +15,13 @@ import lombok.Setter;
 public class CourseSearchResult {
 
     @EmbeddedId
-    private CourseKey pkCourses;
+    private CourseKey coursePk;
 
     @Column(name = "dept", nullable = false)
     private String department;
 
     @Column(name = "code_num", nullable = false)
-    private int code;
+    private short code;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -30,10 +30,10 @@ public class CourseSearchResult {
     private String description;
 
     @Column(name = "credit_min", nullable = false)
-    private short creditMin;
+    private byte creditMin;
 
     @Column(name = "credit_max", nullable = false)
-    private short creditMax;
+    private byte creditMax;
 
     @Column(name = "sem_list", nullable = false)
     private String semesterList;

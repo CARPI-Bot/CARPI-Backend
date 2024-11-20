@@ -15,7 +15,7 @@ public class CourseSeats {
     private CourseSeatsKey courseSeatsPk;
 
     @Column(name = "sem_year", nullable = false)
-    private int semesterYear;
+    private short semesterYear;
 
     @Column(name = "semester", nullable = false)
     private String semester;
@@ -24,11 +24,11 @@ public class CourseSeats {
     private String department;
 
     @Column(name = "code_num", nullable = false)
-    private int code;
+    private short code;
 
     @Column(name = "seats_filled", nullable = false)
-    private int seatsFilled;
+    private short seatsFilled;
 
     @Column(name = "seats_total", nullable = false)
-    private int seatsTotal;
+    private short seatsTotal;
 }

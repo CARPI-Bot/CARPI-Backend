@@ -23,7 +23,7 @@ public class Course {
     private String department;
 
     @Column(name = "code_num", nullable = false)
-    private int code;
+    private short code;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -32,8 +32,8 @@ public class Course {
     private String description;
 
     @Column(name = "credit_min", nullable = false)
-    private short creditMin;
+    private byte creditMin;
 
     @Column(name = "credit_max", nullable = false)
-    private short creditMax;
+    private byte creditMax;
 }

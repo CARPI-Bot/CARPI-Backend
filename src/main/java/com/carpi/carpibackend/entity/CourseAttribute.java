@@ -23,7 +23,7 @@ public class CourseAttribute {
     private String department;
 
     @Column(name = "code_num", nullable = false)
-    private int code;
+    private short code;
 
     @Column(name = "attr", nullable = false)
     private String attribute;

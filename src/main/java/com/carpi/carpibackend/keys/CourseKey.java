@@ -17,7 +17,7 @@ public class CourseKey implements Serializable {
     private String department;
 
     @Column(name = "code_num", insertable = false, updatable = false, nullable = false)
-    private int code;
+    private short code;
 
     @Override
     public boolean equals(Object obj) {
@@ -33,7 +33,7 @@ public class CourseKey implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = department != null ? department.hashCode() : 0;
+        int result = (department != null ? department.hashCode() : 0);
         result = 31 * result + Integer.hashCode(code);
         return result;
     }

@@ -15,7 +15,7 @@ public class CourseDto {
     private String department;
 
     @Min(0)
-    private int code;
+    private short code;
 
     @NotNull
     private String title;
@@ -24,10 +24,10 @@ public class CourseDto {
     private String description;
 
     @Min(0)
-    private short creditMin;
+    private byte creditMin;
 
     @Min(0)
-    private short creditMax;
+    private byte creditMax;
 
     @NotNull
     private String[] semesterList;

@@ -12,7 +12,7 @@ public class CourseAttributeKey implements Serializable {
     private String department;
 
     @Column(name = "code_num", insertable = false, updatable = false, nullable = false)
-    private int code;
+    private short code;
 
     @Column(name = "attr", insertable = false, updatable = false, nullable = false)
     private String attr;
@@ -33,9 +33,9 @@ public class CourseAttributeKey implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = department != null ? department.hashCode() : 0;
+        int result = (department != null ? department.hashCode() : 0);
         result = 31 * result + Integer.hashCode(code);
-        result = 31 * result + attr != null ? attr.hashCode() : 0;
+        result = 31 * result + (attr != null ? attr.hashCode() : 0);
         return result;
     }
 

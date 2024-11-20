@@ -9,7 +9,7 @@ import jakarta.persistence.Embeddable;
 public class CourseSeatsKey implements Serializable {
     
     @Column(name = "sem_year", insertable = false, updatable = false, nullable = false)
-    private int semesterYear;
+    private short semesterYear;
 
     @Column(name = "semester", insertable = false, updatable = false, nullable = false)
     private String semester;
@@ -18,7 +18,7 @@ public class CourseSeatsKey implements Serializable {
     private String department;
 
     @Column(name = "code_num", insertable = false, updatable = false, nullable = false)
-    private int code;
+    private short code;
 
     @Override
     public boolean equals(Object obj) {
