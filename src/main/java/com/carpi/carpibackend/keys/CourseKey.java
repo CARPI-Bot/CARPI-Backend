@@ -26,7 +26,8 @@ public class CourseKey implements Serializable {
         }
         if (obj instanceof CourseKey) {
             CourseKey other = (CourseKey) obj;
-            return department.equals(other.department) && code == other.code;
+            return (department != null ? department.equals(other.department) : other.department == null)
+                   && code == other.code;
         }
         return false;
     }

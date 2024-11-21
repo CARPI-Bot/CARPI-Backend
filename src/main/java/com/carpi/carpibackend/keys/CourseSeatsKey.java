@@ -28,8 +28,8 @@ public class CourseSeatsKey implements Serializable {
         if (obj instanceof CourseSeatsKey) {
             CourseSeatsKey other = (CourseSeatsKey) obj;
             return semesterYear == other.semesterYear
-                   && semester.equals(other.semester)
-                   && department.equals(other.department)
+                   && (semester != null ? semester.equals(other.semester) : other.semester == null)
+                   && (department != null ? department.equals(other.department) : other.department == null)
                    && code == other.code;
         }
         return false;

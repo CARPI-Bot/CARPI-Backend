@@ -24,9 +24,9 @@ public class CourseAttributeKey implements Serializable {
         }
         if (obj instanceof CourseAttributeKey) {
             CourseAttributeKey other = (CourseAttributeKey) obj;
-            return department.equals(other.department)
+            return (department != null ? department.equals(other.department) : other.department == null)
                    && code == other.code
-                   && attr.equals(other.attr);
+                   && (attr != null ? attr.equals(other.attr) : other.attr == null);
         }
         return false;
     }
