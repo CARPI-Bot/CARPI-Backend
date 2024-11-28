@@ -99,5 +99,4 @@ public class CourseController {
                                 ).collect(Collectors.toList());
         return ResponseEntity.ok(semNames);
     }
-
 }
